@@ -1,5 +1,7 @@
 package com.swd391.bachhoasi_shipper.controller;
 
+import com.swd391.bachhoasi_shipper.model.dto.request.ShipperLoginDto;
+import com.swd391.bachhoasi_shipper.model.dto.response.ShipperLoginResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -53,6 +55,20 @@ public class AuthController {
             .headers(AuthUtils.getAuthenticationHeader(jwtAuthResponse))
             .body(responseObject);
     }
-    
+
+    @PostMapping("/shipper-authentication")
+    public ResponseEntity<ResponseObject> login(@RequestBody ShipperLoginDto shipperLoginDto){
+        ShipperLoginResponse jwtAuthResponse = authService.shipperLogin(shipperLoginDto);
+        var responseObject = ResponseObject.builder()
+                .code("AUTH_SUCCESS")
+                .message("Welcome To Bach Hoa Si")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .data(jwtAuthResponse)
+                .build();
+        return ResponseEntity.ok()
+                .headers(AuthUtils.shipperGetAuthenticationHeader(jwtAuthResponse))
+                .body(responseObject);
+    }
 
 }

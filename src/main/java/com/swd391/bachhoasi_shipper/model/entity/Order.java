@@ -49,7 +49,7 @@ public class Order {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "OrderStatus")
     private OrderStatus orderStatus;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(value =  EnumType.STRING)
     @Column(name = "PayingMethod")
     private PayingMethod payingMethod;
     @Column(name = "Point")
