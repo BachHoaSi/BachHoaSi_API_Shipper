@@ -1,6 +1,5 @@
 package com.swd391.bachhoasi_shipper.repository;
 
-import com.swd391.bachhoasi_shipper.model.entity.Admin;
 import com.swd391.bachhoasi_shipper.model.entity.Shipper;
 import org.springframework.data.jpa.repository.Query;
 
