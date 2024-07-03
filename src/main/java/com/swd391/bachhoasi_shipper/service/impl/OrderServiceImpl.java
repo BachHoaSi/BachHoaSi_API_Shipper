@@ -2,10 +2,8 @@ package com.swd391.bachhoasi_shipper.service.impl;
 
 import com.swd391.bachhoasi_shipper.model.constant.OrderStatus;
 import com.swd391.bachhoasi_shipper.model.dto.request.OrderRequest;
-import com.swd391.bachhoasi_shipper.model.dto.response.CategoryResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.PaginationResponse;
-import com.swd391.bachhoasi_shipper.model.dto.response.StoreLevelResponse;
 import com.swd391.bachhoasi_shipper.model.entity.Order;
 import com.swd391.bachhoasi_shipper.model.exception.ActionFailedException;
 import com.swd391.bachhoasi_shipper.model.exception.ValidationFailedException;
@@ -18,9 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

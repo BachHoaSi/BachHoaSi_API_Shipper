@@ -27,12 +27,6 @@ spring:
     profiles:
         active: ${PENV}
         
-google:
-    credentials:
-        path: ${GG_CREDENTIAL_PATH:}
-        config-name: ${GG_CREDENTIAL_NAME:bachhoasi.json}
-    firebase:
-        bucket: ${BUCKET}
 server:
     servlet:
         context-path: /api/v1

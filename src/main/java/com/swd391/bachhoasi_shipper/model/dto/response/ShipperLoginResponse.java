@@ -1,6 +1,5 @@
 package com.swd391.bachhoasi_shipper.model.dto.response;
 
-import com.swd391.bachhoasi_shipper.model.constant.Role;
 import com.swd391.bachhoasi_shipper.model.constant.TokenType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
