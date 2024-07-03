@@ -1,39 +1,30 @@
 package com.swd391.bachhoasi_shipper.model.entity;
 
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SourceType;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import com.swd391.bachhoasi_shipper.model.constant.ShipperStatus;
 import com.swd391.bachhoasi_shipper.model.constant.ShippingStatus;
 import com.swd391.bachhoasi_shipper.model.constant.VehicleType;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Shipper")
-public class Shipper {
+public class Shipper implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
     @Column(name = "Name", columnDefinition = "varchar", length = 48)
     private String name;

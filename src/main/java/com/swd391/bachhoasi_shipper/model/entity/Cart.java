@@ -1,37 +1,27 @@
 package com.swd391.bachhoasi_shipper.model.entity;
 
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.List;
-
 import com.swd391.bachhoasi_shipper.model.constant.CartStatus;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Cart")
-public class Cart {
+public class Cart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "Id")
+    @Column(name = "Id", columnDefinition = "BIGINT")
     private BigDecimal id;
-    @OneToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Store.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "StoreId")
     private Store store;
     @Enumerated(value = EnumType.STRING)
@@ -41,6 +31,6 @@ public class Cart {
     private Date createdDate;
     @Column(name = "UpdatedDate")
     private Date updatedDate;
-    @OneToMany(targetEntity = CartProduct.class,mappedBy = "cart", fetch = FetchType.EAGER)
-    private List<CartProduct> cartProducts;
+    @OneToMany(targetEntity = CartProductMenu.class,mappedBy = "cart", fetch = FetchType.EAGER)
+    private List<CartProductMenu> cartProducts;
 }
