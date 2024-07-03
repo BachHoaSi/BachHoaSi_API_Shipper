@@ -29,7 +29,7 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
     @GetMapping
-    public ResponseEntity<ResponseObject> getAll(
+    public ResponseEntity<ResponseObject> getAllByShipper(
             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pagination,
             @RequestParam(required = false, name = "q") String query
     ) {
