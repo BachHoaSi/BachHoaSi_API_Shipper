@@ -2,17 +2,27 @@ package com.swd391.bachhoasi_shipper.service.impl;
 
 import com.swd391.bachhoasi_shipper.model.constant.OrderStatus;
 import com.swd391.bachhoasi_shipper.model.dto.request.OrderRequest;
+import com.swd391.bachhoasi_shipper.model.dto.response.CategoryResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.OrderResponse;
+import com.swd391.bachhoasi_shipper.model.dto.response.PaginationResponse;
+import com.swd391.bachhoasi_shipper.model.dto.response.StoreLevelResponse;
 import com.swd391.bachhoasi_shipper.model.entity.Order;
+import com.swd391.bachhoasi_shipper.model.exception.ActionFailedException;
 import com.swd391.bachhoasi_shipper.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi_shipper.repository.OrderRepository;
 import com.swd391.bachhoasi_shipper.service.OrderService;
 import com.swd391.bachhoasi_shipper.util.AuthUtils;
+import com.swd391.bachhoasi_shipper.util.TextUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -24,6 +34,10 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse updateOrder(OrderRequest orderRequest)
     {
         var loginUser = authUtils.getShipper();
+        if (loginUser.getId() == orderRequest.getShipperId()){
+            throw new ValidationFailedException("The order is delivered to another shipper, please check again !!!");
+        }
+
         if (orderRequest == null) {
             throw new ValidationFailedException("Order request is null, please check again !!!");
         }
@@ -47,10 +61,31 @@ public class OrderServiceImpl implements OrderService {
             throw new ValidationFailedException("Cannot update Order, please check again !!!");
         }
     }
+
+
+
+    @Override
+    public PaginationResponse<OrderResponse> getShipperOrders(Pageable pagination, Map<String, String> parameter) {
+        var loginUser = authUtils.getShipper();
+        if(parameter == null) parameter = new HashMap<>();
+        var parameterList = TextUtils.convertKeysToCamel(parameter);
+        try {
+            Page<OrderResponse> orderPage = orderRepository.searchByParameterAndShipperId(parameterList, pagination, loginUser.getId())
+                    .map(item -> OrderResponse.builder()
+                            .id(item.getId())
+                            .orderContact(item.getOrderContact())
+                            .orderStatus(item.getOrderStatus())
+                            .deliveryFeedback(item.getDeliveryFeedback())
+                            .build());
+            return new PaginationResponse<>(orderPage);
+        } catch (Exception ex ) {
+            throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
+        }
+    }
+
     public OrderResponse mapToOrderRespone(Order order) {
         return OrderResponse.builder()
                 .orderStatus(order.getOrderStatus())
-
                 .build();
     }
 
