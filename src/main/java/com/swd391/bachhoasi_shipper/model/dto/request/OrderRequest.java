@@ -1,5 +1,6 @@
 package com.swd391.bachhoasi_shipper.model.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.swd391.bachhoasi_shipper.model.constant.OrderStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -15,4 +16,6 @@ public class OrderRequest {
     private String deliveryFeedback;
     @NotBlank(message = "Order Status should't empty")
     private OrderStatus orderStatus;
+    @JsonProperty("shipper-id")
+    private BigDecimal shipperId;
 }
