@@ -20,8 +20,6 @@ services:
       REFRESH_TOKEN_EXT: ${REFRESH_TOKEN_EXT}
       BASE_URL_API: ${BASE_URL_API}
       ORIGIN_ALLOWED: ${ORIGIN_ALLOWED}
-    volumes:
-      - ${GG_LOCAL_CREDENTIAL_PATH}:/bachhoasi/key
     networks:
       - bachhoasi-networks
       - nginx_proxy_manager
