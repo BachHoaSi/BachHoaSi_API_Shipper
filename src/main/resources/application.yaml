@@ -8,7 +8,7 @@ spring:
         driver-class-name: org.postgresql.Driver
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
         show-sql: true
         naming:
             physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -27,12 +27,6 @@ spring:
     profiles:
         active: ${PENV}
         
-google:
-    credentials:
-        path: ${GG_CREDENTIAL_PATH:}
-        config-name: ${GG_CREDENTIAL_NAME:bachhoasi.json}
-    firebase:
-        bucket: ${BUCKET}
 server:
     servlet:
         context-path: /api/v1
