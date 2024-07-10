@@ -4,6 +4,8 @@ services:
     container_name: bachhoasi-api-shipper-management
     image: ${DOCKER_USERNAME}/bach-hoa-si-api-shipper:latest
     restart: always
+    ports:
+      - ${PORT}:${PORT}
     environment:
       DB_URL: postgresql-bachhoasi
       DB_USERNAME: ${DB_USERNAME}
@@ -20,14 +22,10 @@ services:
       ORIGIN_ALLOWED: ${ORIGIN_ALLOWED}
     networks:
       - bachhoasi-networks
-      - nginx_proxy_manager
 
 networks:
   bachhoasi-networks:
-    name: bach-hoa-si-api-test_bachhoasi-networks
-    external: true
-  nginx_proxy_manager:
-    name: nginx_proxy_manager_default
+    name: bachhoasi-networks
     external: true
 
 
