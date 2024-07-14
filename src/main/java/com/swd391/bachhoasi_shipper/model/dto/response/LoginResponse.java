@@ -15,11 +15,9 @@ import lombok.Setter;
 public class LoginResponse {
     private String accessToken;
     private String refreshToken;
-    private Role role;
     private TokenType tokenType;
-    public LoginResponse(String accessToken, String refreshToken, Role role) {
+    public LoginResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
-        this.role = role;
         this.refreshToken = refreshToken;
         this.tokenType = TokenType.BEARER;
     }

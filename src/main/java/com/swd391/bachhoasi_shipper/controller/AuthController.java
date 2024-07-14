@@ -56,19 +56,6 @@ public class AuthController {
             .body(responseObject);
     }
 
-    @PostMapping("/shipper-authentication")
-    public ResponseEntity<ResponseObject> login(@RequestBody ShipperLoginDto shipperLoginDto){
-        ShipperLoginResponse jwtAuthResponse = authService.shipperLogin(shipperLoginDto);
-        var responseObject = ResponseObject.builder()
-                .code("AUTH_SUCCESS")
-                .message("Welcome To Bach Hoa Si")
-                .status(HttpStatus.OK)
-                .isSuccess(true)
-                .data(jwtAuthResponse)
-                .build();
-        return ResponseEntity.ok()
-                .headers(AuthUtils.shipperGetAuthenticationHeader(jwtAuthResponse))
-                .body(responseObject);
-    }
+
 
 }

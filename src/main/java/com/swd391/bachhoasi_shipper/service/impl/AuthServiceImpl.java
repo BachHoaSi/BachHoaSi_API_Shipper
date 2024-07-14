@@ -24,21 +24,20 @@ import com.swd391.bachhoasi_shipper.service.AuthService;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final AdminRepository adminRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final ShipperRepository shipperRepository;
 
     @Override
     public LoginResponse login(LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessToken = jwtProvider.generateToken(authentication, TokenType.ACCESS_TOKEN);
         String refreshToken = jwtProvider.generateRefreshToken(authentication);
         try {
-            Admin user = adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+            Shipper user = shipperRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
             .orElseThrow();
-            return new LoginResponse(accessToken, refreshToken, user.getRole());
+            return new LoginResponse(accessToken, refreshToken);
         }catch (Exception e){
             throw new AuthFailedException("Your account may have been remove or disable during login");
         }
@@ -48,27 +47,13 @@ public class AuthServiceImpl implements AuthService {
         try {
             String username = jwtProvider.getUsernameFromJWT(refreshToken, TokenType.REFRESH_TOKEN);
             String accessToken = jwtProvider.generateToken(username, TokenType.ACCESS_TOKEN);
-            Admin user = adminRepository.findByUsername(username)
+            Shipper user = shipperRepository.findByEmail(username)
             .orElseThrow();
-            return new LoginResponse(accessToken, refreshToken, user.getRole());
+            return new LoginResponse(accessToken, refreshToken);
         }catch (Exception e){
             throw new AuthFailedException("Refresh token isn't valid, please try again");
         }
     }
 
-    @Override
-    public ShipperLoginResponse shipperLogin(ShipperLoginDto shipperLoginDto) {
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(shipperLoginDto.getEmail(), shipperLoginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String accessToken = jwtProvider.generateToken(authentication, TokenType.ACCESS_TOKEN);
-        String refreshToken = jwtProvider.generateRefreshToken(authentication);
-        try {
-            Shipper user = shipperRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                    .orElseThrow();
-            return new ShipperLoginResponse(accessToken, refreshToken);
-        }catch (Exception e){
-            throw new AuthFailedException("Your account may have been remove or disable during login");
-        }
-    }
 }

@@ -1,5 +1,7 @@
 package com.swd391.bachhoasi_shipper.service.impl;
 
+import com.swd391.bachhoasi_shipper.model.entity.Shipper;
+import com.swd391.bachhoasi_shipper.repository.ShipperRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,17 +21,15 @@ import java.util.Collections;
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final AdminRepository adminRepository;
+    private final ShipperRepository shipperRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        Admin admin = adminRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Wrong username, please check again !!!"));
-        return new User(admin.getUsername(), admin.getHashPassword(), rolesToAuthority(admin));
+    public UserDetails loadUserByUsername(String email) {
+        Shipper shipper = shipperRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Wrong username, please check again !!!"));
+        return new User(shipper.getEmail(), shipper.getHashPassword(), rolesToAuthority(shipper));
     }
 
-    private Collection<GrantedAuthority> rolesToAuthority(Admin user) {
-        return Collections.singletonList(
-            new SimpleGrantedAuthority(String.format("ROLE_%s", user.getRole().name()))
-        );
+    private Collection<GrantedAuthority> rolesToAuthority(Shipper user) {
+        return Collections.EMPTY_LIST;
     }
 }

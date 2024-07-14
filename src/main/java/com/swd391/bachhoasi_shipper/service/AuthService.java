@@ -11,5 +11,4 @@ import com.swd391.bachhoasi_shipper.model.dto.response.LoginResponse;
 public interface AuthService {
     LoginResponse login(LoginDto loginDto);
     LoginResponse createAccessToken(String refreshToken);
-    ShipperLoginResponse shipperLogin(ShipperLoginDto shipperLoginDto);
 }
