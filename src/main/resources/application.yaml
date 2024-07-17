@@ -1,6 +1,6 @@
 spring:
     application:
-      name: bachhoasi
+        name: bachhoasi
     datasource:
         url: jdbc:postgresql://${DB_URL:localhost}:${DB_PORT:5432}/${DB_NAME}
         username: ${DB_USERNAME}
@@ -19,14 +19,14 @@ spring:
     sql:
         init:
             mode: always
-            
+
     servlet:
-        multipart: 
+        multipart:
             max-file-size: 10MB
             max-request-size: 10MB
     profiles:
         active: ${PENV}
-        
+
 server:
     servlet:
         context-path: /api/v1
@@ -48,8 +48,20 @@ base-urls:
     front-end: ${ORIGIN_ALLOWED:null}
 access-token:
     max-age: ${ACCESS_TOKEN_EXT:86400000}
-    secret-key: ${ACCESS_TOKEN_KEY} 
+    secret-key: ${ACCESS_TOKEN_KEY}
 
 refresh-token:
     max-age: ${REFRESH_TOKEN_EXT:315360000}
     secret-key: ${REFRESH_TOKEN_KEY}
+
+mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL}
+    password: ${PASSWORD}
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+        auth: true
+        starttls.enable: true
+        ssl.trust: smtp.gmail.com

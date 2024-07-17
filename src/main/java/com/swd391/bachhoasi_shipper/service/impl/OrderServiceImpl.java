@@ -38,13 +38,17 @@ public class OrderServiceImpl implements OrderService {
         if (orderRequest.getId() == null) {
             throw new ValidationFailedException("Order request is null, please check again !!!");
         }
+        if (orderRequest.getOrderStatus().equals(OrderStatus.CANCELLED) || orderRequest.getOrderStatus().equals(OrderStatus.PICKED_UP)) {
+            throw new ValidationFailedException("You can change status to" + orderRequest.getOrderStatus());
+
+        }
         Optional<Order> orderOptional = orderRepository.findById(orderRequest.getId());
         if (orderOptional.isEmpty()) {
             throw new ValidationFailedException("Order not found, please check again !!!");
         }
         Order orderEntity = orderOptional.get();
-        if (!orderEntity.getOrderStatus().equals(OrderStatus.PENDING)) {
-            throw new ValidationFailedException("Order is " + orderEntity.getOrderStatus().toString() + ", cannot change shipper!!!");
+        if (orderEntity.getOrderStatus().equals(OrderStatus.DELIVERED) || orderEntity.getOrderStatus().equals(OrderStatus.CANCELLED) ) {
+            throw new ValidationFailedException("Order is in status" + orderEntity.getOrderStatus().toString() + ", cannot change !!!");
         }
         orderEntity.setOrderStatus(orderRequest.getOrderStatus());
         orderEntity.setUpdatedDate(new Date(System.currentTimeMillis()));
