@@ -33,7 +33,7 @@ public class OrderController {
                 .search(query)
                 .wrapSort(pagination)
                 .build();
-        var result = orderService.getShipperOrders(queryDto.pagination(),queryDto.search());
+        var result = orderService.getShipperOrders(queryDto);
         return ResponseEntity.ok(
                 ResponseObject.builder()
                         .code("ORDER_GET_SUCCESS")

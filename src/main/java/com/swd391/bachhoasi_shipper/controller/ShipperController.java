@@ -5,9 +5,11 @@ import com.swd391.bachhoasi_shipper.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi_shipper.service.ShipperService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,7 +33,19 @@ public class ShipperController {
         );
     }
 
-
+    @Operation(summary = "Register new shipper", description = "Register new shipper, system will send password to shipper email")
+    @PostMapping
+    public ResponseEntity<ResponseObject> registerNewShipper(@RequestBody ShipperRequest shipperRequest) throws MessagingException {
+        var result = shipperService.registerNewShipper(shipperRequest);
+        var responseObject = ResponseObject
+                .builder()
+                .code("ADD_SHIPPER_SUCCESS")
+                .message("Add shipper Successfully")
+                .isSuccess(true)
+                .data(result)
+                .build();
+        return ResponseEntity.ok(responseObject);
+    }
 
     @Operation(summary = "Change Password", description = "input password and password will be hashed and saved")
     @PatchMapping("reset-password")

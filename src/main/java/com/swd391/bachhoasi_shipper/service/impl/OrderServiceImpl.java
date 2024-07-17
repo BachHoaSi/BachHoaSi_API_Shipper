@@ -2,6 +2,7 @@ package com.swd391.bachhoasi_shipper.service.impl;
 
 import com.swd391.bachhoasi_shipper.model.constant.OrderStatus;
 import com.swd391.bachhoasi_shipper.model.dto.request.OrderRequest;
+import com.swd391.bachhoasi_shipper.model.dto.request.SearchRequestParamsDto;
 import com.swd391.bachhoasi_shipper.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi_shipper.model.entity.Order;
@@ -65,12 +66,11 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public PaginationResponse<OrderResponse> getShipperOrders(Pageable pagination, Map<String, String> parameter) {
+    public PaginationResponse<OrderResponse> getShipperOrders(SearchRequestParamsDto request) {
         var loginUser = authUtils.getShipper();
-        if(parameter == null) parameter = new HashMap<>();
-        var parameterList = TextUtils.convertKeysToCamel(parameter);
+
         try {
-            Page<OrderResponse> orderPage = orderRepository.searchByParameterAndShipperId(parameterList, pagination, loginUser.getId())
+            Page<OrderResponse> orderPage = orderRepository.searchByParameterAndShipperId(request.search(), request.pagination(), loginUser.getId())
                     .map(item -> OrderResponse.builder()
                             .id(item.getId())
                             .orderContact(item.getOrderContact())
