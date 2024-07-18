@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Validated
 public class OrderRequest {
-    private BigDecimal id;
+
     @NotBlank(message = "Order Status should't empty")
     private OrderStatus orderStatus;
 

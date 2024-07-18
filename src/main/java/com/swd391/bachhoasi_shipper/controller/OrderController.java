@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/order")
 @RequiredArgsConstructor
@@ -20,9 +22,16 @@ public class OrderController {
     private final OrderService orderService;
 
     @PutMapping
-    public ResponseEntity<ResponseObject> updateStoreType(@RequestBody @Valid OrderRequest orderRequest) {
-        orderService.updateOrder(orderRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseObject> updateStoreType(@RequestParam BigDecimal id, @RequestBody @Valid OrderRequest orderRequest) {
+        var result = orderService.updateOrder(id, orderRequest);
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .code("ORDER_GET_SUCCESS")
+                        .isSuccess(true)
+                        .data(result)
+                        .message("Get Order Success")
+                        .status(HttpStatus.OK)
+                        .build());
     }
     @GetMapping
     public ResponseEntity<ResponseObject> getAllByShipper(
@@ -36,10 +45,10 @@ public class OrderController {
         var result = orderService.getShipperOrders(queryDto);
         return ResponseEntity.ok(
                 ResponseObject.builder()
-                        .code("ORDER_GET_SUCCESS")
+                        .code("ORDER_UPDATE_SUCCESS")
                         .isSuccess(true)
                         .data(result)
-                        .message("Get Order Success")
+                        .message("Update Order Success")
                         .status(HttpStatus.OK)
                         .build()
         );

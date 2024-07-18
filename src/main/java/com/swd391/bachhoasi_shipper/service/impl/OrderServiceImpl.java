@@ -17,11 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,35 +27,36 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final AuthUtils authUtils;
     @Override
-    public OrderResponse updateOrder(OrderRequest orderRequest)
+    public OrderResponse updateOrder(BigDecimal id, OrderRequest orderRequest)
     {
         var loginUser = authUtils.getShipper();
-        if (loginUser.getId() == orderRepository.findById(orderRequest.getId()).get().getShipper().getId()){
-            throw new ValidationFailedException("The order is delivered to another shipper, please check again !!!");
-        }
-
-        if (orderRequest.getId() == null) {
+        var orderEntity = orderRepository.findById(id);
+        var shipperid = orderEntity.get().getShipper().getId();
+        if (orderRepository.findById(id) == null)
             throw new ValidationFailedException("Order request is null, please check again !!!");
-        }
+        if (loginUser == null)
+            throw new ValidationFailedException("Login user is null, please check again !!!");
+        if (!Objects.equals(loginUser.getId(), shipperid))
+            throw new ValidationFailedException("Login user is not the shipper");
         if (orderRequest.getOrderStatus().equals(OrderStatus.CANCELLED) || orderRequest.getOrderStatus().equals(OrderStatus.PICKED_UP)) {
             throw new ValidationFailedException("You can change status to" + orderRequest.getOrderStatus());
 
         }
-        Optional<Order> orderOptional = orderRepository.findById(orderRequest.getId());
-        if (orderOptional.isEmpty()) {
-            throw new ValidationFailedException("Order not found, please check again !!!");
-        }
-        Order orderEntity = orderOptional.get();
-        if (orderEntity.getOrderStatus().equals(OrderStatus.DELIVERED) || orderEntity.getOrderStatus().equals(OrderStatus.CANCELLED) ) {
-            throw new ValidationFailedException("Order is in status" + orderEntity.getOrderStatus().toString() + ", cannot change !!!");
-        }
-        orderEntity.setOrderStatus(orderRequest.getOrderStatus());
-        orderEntity.setUpdatedDate(new Date(System.currentTimeMillis()));
-        orderEntity.setShipper(loginUser);
 
+        if (orderEntity.get().getOrderStatus().equals(OrderStatus.DELIVERED) || orderEntity.get().getOrderStatus().equals(OrderStatus.CANCELLED) ) {
+            throw new ValidationFailedException("Order is in status" + orderEntity.get().getOrderStatus().toString() + ", cannot change !!!");
+        }
+        orderEntity.get().setOrderStatus(orderRequest.getOrderStatus());
+        orderEntity.get().setUpdatedDate(new Date(System.currentTimeMillis()));
         try {
-            Order updatedOrder = orderRepository.save(orderEntity);
-            return mapToOrderRespone(updatedOrder);
+            Order updatedOrder = orderRepository.save(orderEntity.get());
+            return OrderResponse.builder()
+                    .id(updatedOrder.getId())
+                    .orderContact(updatedOrder.getOrderContact())
+                    .orderStatus(updatedOrder.getOrderStatus())
+                    .deliveryFeedback(updatedOrder.getDeliveryFeedback())
+                    .orderStatus(updatedOrder.getOrderStatus())
+                    .build();
         } catch (Exception e) {
             throw new ValidationFailedException("Cannot update Order, please check again !!!");
         }
@@ -85,6 +84,10 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderResponse mapToOrderRespone(Order order) {
         return OrderResponse.builder()
+                .id(order.getId())
+                .orderContact(order.getOrderContact())
+                .orderStatus(order.getOrderStatus())
+                .deliveryFeedback(order.getDeliveryFeedback())
                 .orderStatus(order.getOrderStatus())
                 .build();
     }
