@@ -1,5 +1,7 @@
 package com.swd391.bachhoasi_shipper.service.impl;
 
+import com.swd391.bachhoasi_shipper.model.constant.ShipperStatus;
+import com.swd391.bachhoasi_shipper.model.constant.ShippingStatus;
 import com.swd391.bachhoasi_shipper.model.dto.request.ShipperRequest;
 import com.swd391.bachhoasi_shipper.model.dto.response.ShipperResponseDto;
 import com.swd391.bachhoasi_shipper.model.entity.Shipper;
@@ -120,6 +122,8 @@ public class ShipperServiceImpl implements ShipperService {
                 .idCardIssueDate(shipperRequest.getIdCardIssueDate())
                 .idCardIssuePlace(shipperRequest.getIdCardIssuePlace())
                 .vehicleType(shipperRequest.getVehicleType())
+                .status(ShipperStatus.APPROVED)
+                .shippingStatus(ShippingStatus.WAITING_FOR_ORDER)
                 .isActive(true)
                 .isLocked(false)
                 .build();;
@@ -138,7 +142,24 @@ public class ShipperServiceImpl implements ShipperService {
         shipper.setHashPassword(hashPass);
         try {
             var dbResult = shipperRepository.save(shipper);
-            return convertToDto(dbResult);
+            return ShipperResponseDto.builder()
+                    .id(dbResult.getId())
+                    .name(dbResult.getName())
+                    .phone(dbResult.getPhone())
+                    .email(dbResult.getEmail())
+                    .status(dbResult.getStatus())
+                    .shippingStatus(dbResult.getShippingStatus())
+                    .licenseNumber(dbResult.getLicenseNumber())
+                    .licenseIssueDate(dbResult.getLicenseIssueDate())
+                    .idCardNumber(dbResult.getIdCardNumber())
+                    .idCardIssuePlace(dbResult.getIdCardIssuePlace())
+                    .idCardIssueDate(dbResult.getIdCardIssueDate())
+                    .vehicleType(dbResult.getVehicleType())
+                    .createdDate(dbResult.getCreatedDate())
+                    .updatedDate(dbResult.getUpdatedDate())
+                    .isActive(dbResult.getIsActive())
+                    .isLocked(dbResult.getIsLocked())
+                    .build();
         } catch (Exception ex) {
             throw new ActionFailedException(
                     String.format("Something happen when adding new shipper to system: %s", ex.getMessage()));
