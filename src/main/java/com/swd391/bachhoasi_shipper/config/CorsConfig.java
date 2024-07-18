@@ -69,6 +69,9 @@ public class CorsConfig {
         List<String> corsAllowOrigins = new ArrayList<>();
         corsAllowOrigins.add("http://localhost:3000");
         corsAllowOrigins.add("https://api-shipper.fams.college");
+        corsAllowOrigins.add("https://oauth.zaloapp.com");
+        corsAllowOrigins.add("https://h5.zdn.vn/");
+        corsAllowOrigins.add("zbrowser://h5.zdn.vn/");
         if (!allowOrigin.equals("null"))
             corsAllowOrigins.add(allowOrigin);
         return corsAllowOrigins.toArray(new String[0]);
