@@ -1,16 +1,21 @@
 package com.swd391.bachhoasi_shipper.model.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 @Embeddable
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductMenuId implements Serializable{
     @ManyToOne(targetEntity = Menu.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "MenuId", nullable = false)

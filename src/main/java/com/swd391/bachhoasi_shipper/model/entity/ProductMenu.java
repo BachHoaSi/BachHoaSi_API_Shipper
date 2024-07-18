@@ -1,17 +1,29 @@
 package com.swd391.bachhoasi_shipper.model.entity;
 
-import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import org.hibernate.annotations.SourceType;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SourceType;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Builder;
+import lombok.Data;
 @Entity(name = "ProductMenu")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductMenu implements Serializable {
     @EmbeddedId
     private ProductMenuId composeId;

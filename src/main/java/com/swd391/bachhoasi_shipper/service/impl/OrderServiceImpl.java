@@ -3,10 +3,13 @@ package com.swd391.bachhoasi_shipper.service.impl;
 import com.swd391.bachhoasi_shipper.model.constant.OrderStatus;
 import com.swd391.bachhoasi_shipper.model.dto.request.OrderRequest;
 import com.swd391.bachhoasi_shipper.model.dto.request.SearchRequestParamsDto;
+import com.swd391.bachhoasi_shipper.model.dto.response.OrderDetailResponse;
+import com.swd391.bachhoasi_shipper.model.dto.response.OrderProductMenuResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.OrderResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.PaginationResponse;
 import com.swd391.bachhoasi_shipper.model.entity.Order;
 import com.swd391.bachhoasi_shipper.model.exception.ActionFailedException;
+import com.swd391.bachhoasi_shipper.model.exception.NotFoundException;
 import com.swd391.bachhoasi_shipper.model.exception.ValidationFailedException;
 import com.swd391.bachhoasi_shipper.repository.OrderRepository;
 import com.swd391.bachhoasi_shipper.service.OrderService;
@@ -80,6 +83,48 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception ex ) {
             throw new ActionFailedException(ex.getMessage(), "ORDER_GET_FAILED");
         }
+    }
+
+    @Override
+    public OrderDetailResponse getDetailOrder(BigDecimal orderId) {
+        var loginUser = authUtils.getShipper();
+        var orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Not found this order"));
+        if (loginUser == null)
+            throw new ValidationFailedException("Login user is null, please check again !!!");
+        if (loginUser != orderEntity.getShipper())
+            throw new ValidationFailedException("Login user is not the shipper");
+        var orderContact = orderEntity.getOrderContact();
+        var orderProductList = orderEntity.getOrderProducts();
+        List<OrderProductMenuResponse> orderProductListResponse = Collections.emptyList();
+        if (orderProductList != null) {
+            orderProductListResponse = orderProductList.stream().map(item -> {
+                var productMenu = item.getProduct();
+                var product = productMenu.getComposeId().getProduct();
+                return OrderProductMenuResponse.builder()
+                        .id(item.getId())
+                        .quantity(item.getQuantity())
+                        .productName(product.getName())
+                        .url(product.getUrlImages())
+                        .category(product.getCategory().getName())
+                        .build();
+            }).toList();
+        }
+        return OrderDetailResponse.builder()
+                .orderId(orderId)
+                .storeName(orderContact.getCustomerName())
+                .orderStatus(orderEntity.getOrderStatus())
+                .total(orderEntity.getSubTotal())
+                .createdAt(orderEntity.getCreatedDate())
+                .deliveryTime(null)
+                .feedback(orderEntity.getOrderFeedback())
+                .orderContactId(orderContact.getId())
+                .buildingNumber(orderContact.getBuildingNumber())
+                .phoneNumber(orderContact.getPhoneNumber())
+                .street(orderContact.getStreet())
+                .paymentMethod(orderEntity.getPayingMethod())
+                .grandTotal(orderEntity.getGrandTotal())
+                .orderProductMenu(orderProductListResponse)
+                .build();
     }
 
     public OrderResponse mapToOrderRespone(Order order) {

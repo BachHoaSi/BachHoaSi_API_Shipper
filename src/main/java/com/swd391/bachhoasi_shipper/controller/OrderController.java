@@ -2,6 +2,7 @@ package com.swd391.bachhoasi_shipper.controller;
 
 import com.swd391.bachhoasi_shipper.model.dto.request.OrderRequest;
 import com.swd391.bachhoasi_shipper.model.dto.request.SearchRequestParamsDto;
+import com.swd391.bachhoasi_shipper.model.dto.response.OrderDetailResponse;
 import com.swd391.bachhoasi_shipper.model.dto.response.ResponseObject;
 import com.swd391.bachhoasi_shipper.service.OrderService;
 import jakarta.validation.Valid;
@@ -53,5 +54,16 @@ public class OrderController {
                         .build()
         );
     }
-
+    @GetMapping("{orderId}")
+    public ResponseEntity<ResponseObject> getOrderDetail(@PathVariable(name = "orderId") BigDecimal orderId) {
+        OrderDetailResponse orderResponse = orderService.getDetailOrder(orderId);
+        var responseObject = ResponseObject.builder()
+                .data(orderResponse)
+                .code("GET_ORDER_DETAILED_SUCCESS")
+                .message("Get order detailed successfully")
+                .status(HttpStatus.OK)
+                .isSuccess(true)
+                .build();
+        return ResponseEntity.ok().body(responseObject);
+    }
 }
