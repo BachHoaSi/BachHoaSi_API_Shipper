@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
 
         }
 
-        if (orderEntity.get().getOrderStatus().equals(OrderStatus.DELIVERED) || orderEntity.get().getOrderStatus().equals(OrderStatus.CANCELLED) ) {
+        if (orderEntity.get().getOrderStatus().equals(OrderStatus.DELIVERED) || orderEntity.get().getOrderStatus().equals(OrderStatus.CANCELLED) || orderEntity.get().getOrderStatus().equals(OrderStatus.PICKED_UP)) {
             throw new ValidationFailedException("Order is in status" + orderEntity.get().getOrderStatus().toString() + ", cannot change !!!");
         }
         orderEntity.get().setOrderStatus(orderRequest.getOrderStatus());
