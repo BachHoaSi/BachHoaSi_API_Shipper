@@ -106,6 +106,7 @@ public class OrderServiceImpl implements OrderService {
                         .productName(product.getName())
                         .url(product.getUrlImages())
                         .category(product.getCategory().getName())
+                        .price(product.getBasePrice())
                         .build();
             }).toList();
         }
@@ -115,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderStatus(orderEntity.getOrderStatus())
                 .total(orderEntity.getSubTotal())
                 .createdAt(orderEntity.getCreatedDate())
-                .deliveryTime(null)
+                .deliveryTime(orderEntity.getCreatedDate())
                 .feedback(orderEntity.getOrderFeedback())
                 .orderContactId(orderContact.getId())
                 .buildingNumber(orderContact.getBuildingNumber())
@@ -124,6 +125,7 @@ public class OrderServiceImpl implements OrderService {
                 .paymentMethod(orderEntity.getPayingMethod())
                 .grandTotal(orderEntity.getGrandTotal())
                 .orderProductMenu(orderProductListResponse)
+
                 .build();
     }
 
