@@ -23,14 +23,14 @@ public class OrderController {
     private final OrderService orderService;
 
     @PutMapping
-    public ResponseEntity<ResponseObject> updateStoreType(@RequestParam BigDecimal id, @RequestBody @Valid OrderRequest orderRequest) {
+    public ResponseEntity<ResponseObject> updateOrder(@RequestParam BigDecimal id, @RequestBody @Valid OrderRequest orderRequest) {
         var result = orderService.updateOrder(id, orderRequest);
         return ResponseEntity.ok(
                 ResponseObject.builder()
-                        .code("ORDER_GET_SUCCESS")
+                        .code("ORDER_UPDATE_SUCCESS")
                         .isSuccess(true)
                         .data(result)
-                        .message("Get Order Success")
+                        .message("Update Order Success")
                         .status(HttpStatus.OK)
                         .build());
     }
@@ -46,10 +46,10 @@ public class OrderController {
         var result = orderService.getShipperOrders(queryDto);
         return ResponseEntity.ok(
                 ResponseObject.builder()
-                        .code("ORDER_UPDATE_SUCCESS")
+                        .code("ORDER_GET_SUCCESS")
                         .isSuccess(true)
                         .data(result)
-                        .message("Update Order Success")
+                        .message("Get Order Success")
                         .status(HttpStatus.OK)
                         .build()
         );
@@ -60,7 +60,7 @@ public class OrderController {
         var responseObject = ResponseObject.builder()
                 .data(orderResponse)
                 .code("GET_ORDER_DETAILED_SUCCESS")
-                .message("Get order detailed successfully")
+                .message("Get order details successfully")
                 .status(HttpStatus.OK)
                 .isSuccess(true)
                 .build();
