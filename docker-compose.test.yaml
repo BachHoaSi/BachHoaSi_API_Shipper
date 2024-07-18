@@ -20,6 +20,9 @@ services:
       REFRESH_TOKEN_EXT: ${REFRESH_TOKEN_EXT}
       BASE_URL_API: ${BASE_URL_API}
       ORIGIN_ALLOWED: ${ORIGIN_ALLOWED}
+      
+      EMAIL: ${SEND_EMAIL}
+      PASSWORD: ${SEND_PASSWORD}
     networks:
       - bachhoasi-networks
 

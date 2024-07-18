@@ -48,6 +48,9 @@ jobs:
       PORT: ${{secrets.PORT}}
       BASE_URL_API: ${{secrets.BASE_URL_API}}
       ORIGIN_ALLOWED: ${{secrets.ORIGIN_ALLOWED}}
+
+      SEND_EMAIL: ${{secrets.SEND_EMAIL}}
+      SEND_PASSWORD: ${{secrets.SEND_PASSWORD}}
       
       DOCKER_USERNAME: ${{ secrets.REGISTRY_NAME }}
     steps:
