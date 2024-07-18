@@ -151,14 +151,36 @@ public class ShipperServiceImpl implements ShipperService {
 
         Shipper userDb = shipperRepository.findById(loginUser.getId()).orElseThrow(() -> new NotFoundException(
                 String.format("Can't found shipper with id: %s", loginUser.getId().toString())));
-
-        Shipper updateEntity = addUpdateFieldToShipperEntity(shipperRequest, userDb);
+        userDb.setName(shipperRequest.getName());
+        userDb.setPhone(shipperRequest.getPhone());
+        userDb.setEmail(shipperRequest.getEmail());
+        userDb.setLicenseNumber(shipperRequest.getLicenseNumber());
+        userDb.setLicenseIssueDate(shipperRequest.getLicenseIssueDate());
+        userDb.setIdCardNumber(shipperRequest.getIdCardNumber());
+        userDb.setIdCardIssueDate(shipperRequest.getIdCardIssueDate());
+        userDb.setIdCardIssuePlace(shipperRequest.getIdCardIssuePlace());
         try {
-            updateEntity = shipperRepository.save(updateEntity);
-            return getShipperDetail();
-        } catch (Exception ex) {
-            throw new ActionFailedException(
-                    String.format("Username duplicated or something else error: %s", ex.getMessage()));
+            Shipper dbResult = shipperRepository.save(userDb);
+            return ShipperResponseDto.builder()
+                    .id(dbResult.getId())
+                    .name(userDb.getName())
+                    .email(userDb.getEmail())
+                    .phone(userDb.getPhone())
+                    .licenseNumber(userDb.getLicenseNumber())
+                    .licenseIssueDate(userDb.getLicenseIssueDate())
+                    .idCardNumber(userDb.getIdCardNumber())
+                    .idCardIssueDate(userDb.getIdCardIssueDate())
+                    .idCardIssuePlace(userDb.getIdCardIssuePlace())
+                    .vehicleType(userDb.getVehicleType())
+                    .updatedDate(userDb.getUpdatedDate())
+                    .createdDate(userDb.getCreatedDate())
+                    .isActive(userDb.getIsActive())
+                    .isLocked(userDb.getIsLocked())
+                    .status(userDb.getStatus())
+                    .shippingStatus(userDb.getShippingStatus())
+                    .build();
+        } catch (Exception e) {
+            throw new ValidationFailedException("Cannot update Shipper, please check again !!!");
         }
     }
 
