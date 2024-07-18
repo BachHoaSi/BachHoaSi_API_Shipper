@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ValidationFailedException("Login user is null, please check again !!!");
         if (!Objects.equals(loginUser.getId(), shipperid))
             throw new ValidationFailedException("Login user is not the shipper");
-        if (orderRequest.getOrderStatus().equals(OrderStatus.CANCELLED) || orderRequest.getOrderStatus().equals(OrderStatus.PICKED_UP)) {
+        if (orderRequest.getOrderStatus().equals(OrderStatus.CANCELLED) || orderRequest.getOrderStatus().equals(OrderStatus.PICKED_UP) || orderRequest.getOrderStatus().equals(OrderStatus.ACCEPTED)) {
             throw new ValidationFailedException("You can change status to" + orderRequest.getOrderStatus());
 
         }
